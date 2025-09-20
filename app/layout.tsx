@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Providers from '../components/TanStackProvider/TanStackProvider';
+import Providers from '@/components/TanStackProvider/TanStackProvider';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import { Roboto } from 'next/font/google';
@@ -23,13 +23,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-  modal,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+  modal?: React.ReactNode;
+}
+
+export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en" className={roboto.variable}>
       <body>
@@ -38,10 +37,10 @@ export default function RootLayout({
           {children}
           {modal}
           <Footer />
-          <div id="modal-root"></div>
         </Providers>
       </body>
     </html>
   );
 }
+
 

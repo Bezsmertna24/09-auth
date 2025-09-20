@@ -2,14 +2,15 @@
 
 import css from './NoteForm.module.css';
 import { DraftNote, NoteTag, useNoteStore } from "@/lib/store/noteStore";
-import { useRouter } from 'next/navigation';
-import { createNote } from '@/lib/api';
+import { createNote } from '@/lib/api/clientApi';
 
+interface NoteFormProps {
+  onClose: () => void; 
+}
 
-
-export default function NoteForm() {
+export default function NoteForm({ onClose }: NoteFormProps) {
   const { draft, setDraft, clearDraft } = useNoteStore();
-  const router = useRouter();
+
 
   const handleSubmit = async (formData: FormData) => {
     const newNote: DraftNote = {
@@ -20,7 +21,7 @@ export default function NoteForm() {
 
     await createNote(newNote);
     clearDraft();
-    router.back();
+    onClose(); 
   };
 
   return (
@@ -55,11 +56,12 @@ export default function NoteForm() {
         <button type="submit" className={css.submit}>
           Create
         </button>
-        <button type="button" onClick={() => router.back()} className={css.cancel}>
+        <button type="button" onClick={onClose} className={css.cancel}>
           Cancel
         </button>
       </div>
     </form>
   );
 }
+
 
