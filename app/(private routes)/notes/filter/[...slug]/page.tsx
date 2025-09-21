@@ -1,7 +1,7 @@
 import css from "./NoteClient.module.css";
 import type { Metadata } from 'next';
 import NoteListClient from "./Notes.client";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/api";
 import {
   QueryClient,
   HydrationBoundary,

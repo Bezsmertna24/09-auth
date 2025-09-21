@@ -12,7 +12,7 @@ import NoteForm from "@/components/NoteForm/NoteForm";
 import type { Note } from "@/types/note";
 
 interface NotesListClientProps {
-  tag: string;
+  tag?: string;
 }
 
 interface NotesApiResponse {

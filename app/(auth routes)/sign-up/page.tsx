@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/lib/api/clientApi";
 import type { ApiErrorResponse } from "@/types/api";
-import css from "./SignUp.module.css";
+import css from "./SignUpPage.module.css";
 
 export default function SignUpPage() {
   const router = useRouter();

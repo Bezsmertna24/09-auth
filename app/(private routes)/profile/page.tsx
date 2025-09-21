@@ -1,7 +1,7 @@
-import css from "./Profile.module.css";
+import css from "./ProfilePage.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { useAuthStore } from "..//..//..//lib/store/authStore";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function ProfilePage() {
   const { user } = useAuthStore();
