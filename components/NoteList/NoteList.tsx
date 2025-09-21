@@ -1,7 +1,7 @@
 import css from "./NoteList.module.css";
-import type { Note } from "../../types/note";
+import type { Note } from "@/types/note";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteNote } from "@/lib/api/api";
+import { deleteNote } from "@/lib/api/clientApi";
 import Link from "next/link";
 
 interface NoteListProps {
@@ -26,13 +26,15 @@ export default function NoteList({ notes }: NoteListProps) {
           <p className={css.content}>{note.content}</p>
           <div className={css.footer}>
             <span className={css.tag}>{note.tag}</span>
-            <Link href={`./notes/${note.id}`} className={css.button}>View details</Link>
+            <Link href={`/notes/${note.id}`} className={css.button}>
+              View details
+            </Link>
             <button
               className={css.button}
               onClick={() => mutation.mutate(note.id)}
-              disabled={mutation.isPending}
+              disabled={mutation.status === "pending"}
             >
-              {mutation.isPending ? "Deleting..." : "Delete"}
+              {mutation.status === "pending" ? "Deleting..." : "Delete"}
             </button>
           </div>
         </li>

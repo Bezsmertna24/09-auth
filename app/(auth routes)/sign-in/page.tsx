@@ -15,23 +15,22 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const response = await loginUser(email, password);
-    setUser(response);
-    router.push("/profile");
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      setError(err.response?.data?.message || "Login failed");
-    } else if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("Login failed");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser(email, password);
+      setUser(response);
+      router.push("/profile");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Login failed");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Login failed");
+      }
     }
-  }
-};
-
+  };
 
   return (
     <main className={css.mainContent}>
@@ -41,6 +40,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <label htmlFor="email">Email</label>
           <input
             id="email"
+            name="email"
             type="email"
             className={css.input}
             value={email}
@@ -53,6 +53,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <label htmlFor="password">Password</label>
           <input
             id="password"
+            name="password"
             type="password"
             className={css.input}
             value={password}
@@ -70,4 +71,5 @@ const handleSubmit = async (e: React.FormEvent) => {
     </main>
   );
 }
+
 

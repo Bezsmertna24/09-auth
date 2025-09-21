@@ -1,26 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { checkSession } from "./lib/api/serverApi";
 
+const PRIVATE_ROUTES = ["/profile", "/notes"];
+const PUBLIC_ROUTES = ["/sign-in", "/sign-up"];
 
-const PRIVATE_ROUTES = [
-  "/profile",
-  "/profile/edit",
-  "/notes",
-  "/notes/action/create",
-];
-
-
-const PUBLIC_ROUTES = [
-  "/sign-in",
-  "/sign-up",
-];
-
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get("accessToken")?.value;
+export async function middleware(request: NextRequest) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
   const { pathname } = request.nextUrl;
 
 
-  if (token) {
+  if (accessToken) {
 
     if (PUBLIC_ROUTES.some(route => pathname.startsWith(route))) {
       const url = request.nextUrl.clone();
@@ -32,12 +25,49 @@ export function middleware(request: NextRequest) {
   }
 
 
-  if (!token && PRIVATE_ROUTES.some(route => pathname.startsWith(route))) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/sign-in"; 
-    return NextResponse.redirect(url);
+  if (!accessToken && refreshToken) {
+    try {
+      const sessionData = await checkSession(refreshToken);
+
+      if (sessionData?.accessToken && sessionData?.refreshToken) {
+
+        const response = NextResponse.next();
+
+        response.cookies.set("accessToken", sessionData.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+        });
+
+        response.cookies.set("refreshToken", sessionData.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          path: "/",
+        });
+
+        return response;
+      } else {
+
+        const url = request.nextUrl.clone();
+        url.pathname = "/sign-in";
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      console.error("Failed to refresh session:", error);
+      const url = request.nextUrl.clone();
+      url.pathname = "/sign-in";
+      return NextResponse.redirect(url);
+    }
   }
 
+
+  if (PRIVATE_ROUTES.some(route => pathname.startsWith(route))) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/sign-in";
+    return NextResponse.redirect(url);
+  }
 
   return NextResponse.next();
 }
@@ -45,6 +75,10 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/profile/:path*",
+    "/notes/:path*",
+    "/sign-in",
+    "/sign-up",
   ],
 };
+

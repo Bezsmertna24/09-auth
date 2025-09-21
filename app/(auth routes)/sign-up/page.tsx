@@ -23,12 +23,10 @@ export default function SignUpPage() {
       await registerUser(email, password);
       router.push("/profile");
     } catch (err: unknown) {
-
       if (axios.isAxiosError<ApiErrorResponse>(err)) {
         const apiMessage = err.response?.data?.message;
         setError(apiMessage ?? "Registration failed");
       } else if (err instanceof Error) {
-
         setError(err.message);
       } else {
         setError("Unknown error occurred");
@@ -46,6 +44,7 @@ export default function SignUpPage() {
           <label htmlFor="email">Email</label>
           <input
             id="email"
+            name="email"
             type="email"
             className={css.input}
             value={email}
@@ -58,6 +57,7 @@ export default function SignUpPage() {
           <label htmlFor="password">Password</label>
           <input
             id="password"
+            name="password"
             type="password"
             className={css.input}
             value={password}
@@ -81,3 +81,4 @@ export default function SignUpPage() {
     </main>
   );
 }
+
