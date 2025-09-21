@@ -1,4 +1,5 @@
-import NoteForm from '@/components/NoteForm/NoteForm';
+// page.tsx — Server Component
+import NoteFormServerWrapper from '@/components/NoteForm/NoteFormServerWrapper';
 import css from './CreateNote.module.css';
 
 export const metadata = {
@@ -12,13 +13,15 @@ export const metadata = {
   },
 };
 
-export default function CreateNote() {
+export default function CreateNotePage() {
   return (
     <main className={css.main}>
       <div className={css.container}>
         <h1 className={css.title}>Create note</h1>
-        <NoteForm onClose={() => {}}/>
+
+        <NoteFormServerWrapper />
       </div>
     </main>
   );
 }
+

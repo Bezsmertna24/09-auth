@@ -1,3 +1,5 @@
+'use client';
+
 import css from "./ProfilePage.module.css";
 import Link from "next/link";
 import Image from "next/image";
